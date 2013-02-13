@@ -1,6 +1,6 @@
 
 module Teacup
-  class Stylesheet
+  module StylesheetExtension
 
     def identity
       [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
