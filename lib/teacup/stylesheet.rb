@@ -215,21 +215,14 @@ module Teacup
     #       title: "Continue!",
     #       top: 50
     #   end
-    def style(*queries)
-      if queries[-1].is_a? Hash
-        properties = queries.pop
-      else
-        # empty style declarations are allowed
-        return
-      end
+    def style(stylename, properties=nil)
+      return unless properties
 
-      queries.each do |stylename|
-        # reset the stylesheet_cache for this stylename
-        @stylesheet_cache.delete(stylename) if @stylesheet_cache
+      # reset the stylesheet_cache for this stylename
+      @stylesheet_cache.delete(stylename) if @stylesheet_cache
 
-        # merge into styles[stylename], new properties "win"
-        Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
-      end
+      # merge into styles[stylename], new properties "win"
+      Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
     end
 
     # A unique and hopefully meaningful description of this Object.
@@ -252,6 +245,13 @@ module Teacup
           raise "Teacup tried to import Stylesheet #{name_or_stylesheet.inspect} into Stylesheet[#{self.name.inspect}], but it didn't exist"
         end
       end
+    end
+
+    # supports the 'new-style' stylesheet syntax.
+    # @example
+    def method_missing(stylename, &styles)
+      properties = Limelight.new(&styles).styles
+      style(stylename, properties)
     end
 
     protected
