@@ -98,8 +98,6 @@ class UIViewController
       parent_class = parent_class.superclass
     end
 
-    should_restyle = Teacup.should_restyle_and_block
-
     if my_stylesheet and not self.stylesheet
       self.stylesheet = my_stylesheet
     end
@@ -107,15 +105,6 @@ class UIViewController
     if layout_definition
       stylename, properties, block = layout_definition
       layout(view, stylename, properties, &block)
-    end
-
-    if should_restyle
-      Teacup.should_restyle!
-      self.view.restyle!
-    end
-
-    if defined? NSLayoutConstraint
-      self.view.apply_constraints
     end
 
     layoutDidLoad

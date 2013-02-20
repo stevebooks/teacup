@@ -256,4 +256,19 @@ class UIView
     end
   end
 
+  alias old_didMoveToSuperview didMoveToSuperview
+  def didMoveToSuperview
+    should_restyle = Teacup.should_restyle_and_block
+    retval = old_didMoveToSuperview
+    if should_restyle
+      Teacup.should_restyle!
+      self.restyle!
+    end
+
+    if defined? NSLayoutConstraint
+      self.apply_constraints
+    end
+    return retval
+  end
+
 end
