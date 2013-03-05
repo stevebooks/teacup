@@ -258,9 +258,8 @@ class UIView
 
   alias old_didMoveToSuperview didMoveToSuperview
   def didMoveToSuperview
-    should_restyle = Teacup.should_restyle_and_block
     retval = old_didMoveToSuperview
-    if should_restyle
+    if Teacup.should_restyle_and_block
       Teacup.should_restyle!
       self.restyle!
     end
