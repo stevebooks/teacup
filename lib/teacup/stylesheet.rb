@@ -206,6 +206,7 @@ module Teacup
     # `UIView#viewWithStylename` method.
     def extends_style?(stylename, extended_name, checked=[])
       return true if stylename == extended_name
+
       extended_style_names = styles[stylename][:extends]
       return false unless extended_style_names
 
@@ -216,7 +217,7 @@ module Teacup
         next if checked.include?(recusive_check)
 
         checked << recusive_check
-        if extends_style?(stylename, recusive_check, checked)
+        if extends_style?(recusive_check, extended_name, checked)
           retval = true
           break
         end
