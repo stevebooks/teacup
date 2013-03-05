@@ -39,7 +39,7 @@ class UIView
     if name_or_class.is_a? Class
       self.is_a? name_or_class
     else
-      self.stylename == name_or_class
+      self.stylename == name_or_class || self.stylesheet.extends_style?(self.stylename, name_or_class)
     end
   end
 

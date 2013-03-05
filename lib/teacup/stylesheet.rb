@@ -201,6 +201,29 @@ module Teacup
       get_stylesheet_cache(stylename, target, orientation).dup
     end
 
+    # In the rare case you need to know whether the style extends another style,
+    # this method will find out quickly.  This is mostly useful in the
+    # `UIView#viewWithStylename` method.
+    def extends_style?(stylename, extended_name, checked=[])
+      return true if stylename == extended_name
+      extended_style_names = styles[stylename][:extends]
+      return false unless extended_style_names
+
+      extended_style_names = [extended_style_names] unless extended_style_names.is_a? Array
+      return true if extended_style_names.any? { |name| name == extended_name }
+      retval = false
+      extended_style_names.each do |recusive_check|
+        next if checked.include?(recusive_check)
+
+        checked << recusive_check
+        if extends_style?(stylename, recusive_check, checked)
+          retval = true
+          break
+        end
+      end
+      return retval
+    end
+
     # Add a set of properties for a given stylename or multiple stylenames.
     #
     # @param Symbol, *stylename
@@ -231,6 +254,14 @@ module Teacup
         # properties "win" over existing properties.
         Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
       end
+    end
+
+    def update(stylename, properties={}, &new_styles)
+      style(stylename, properties)
+      if new_styles
+        style(stylename, instance_eval(&new_styles))
+      end
+      NSNotificationCenter.defaultCenter.postNotificationName(StylesheetDidChangeNotification, object:name)
     end
 
     # A unique and hopefully meaningful description of this Object.

@@ -1,4 +1,6 @@
 module Teacup
+  StylesheetDidChangeNotification = 'Teacup::StylesheetDidChangeNotification'
+
   # Teacup::Layout defines a layout and subview function that can be used to
   # declare and configure the layout of views and the view hierarchy in your
   # application.
@@ -32,7 +34,18 @@ module Teacup
     #   view.stylesheet = :stylesheet_name
     #
     def stylesheet= val
+      NSNotificationCenter.defaultCenter.removeObserver(self, name:StylesheetDidChangeNotification, object:nil)
+      stylesheet_name = val.is_a?(Symbol) ? val : val.name
+
+      NSNotificationCenter.defaultCenter.addObserver(self,
+              selector: :'stylesheet_did_change:',
+              name: StylesheetDidChangeNotification,
+              object: stylesheet_name)
       @stylesheet = val
+    end
+
+    def stylesheet_did_change(notification)
+      top_level_view.restyle!
     end
 
     # Returns a stylesheet to use to style the contents of this controller's
