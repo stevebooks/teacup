@@ -9,6 +9,10 @@ class RootController < UIViewController
 
   def viewDidLoad
   	super
+    auto do
+      vertical '|-50-[label]'
+    end
+
   	# Title for this view
   	self.title = "Autolayout Example"
   end

@@ -3,12 +3,12 @@ Teacup::Stylesheet.new :root do
 
   v_padding = 10
 
-  style :label, extends: :custom_label,
-    constraints: [
-      :full_width,
-      constrain_top(50)
-    ],
-    backgroundColor: UIColor.clearColor
+  #style :label, extends: :custom_label,
+  #  constraints: [
+  #    :full_width,
+  #    constrain_top(50)
+  #  ],
+  #  backgroundColor: UIColor.clearColor
 
   style :button, extends: :custom_button,
     constraints: [
